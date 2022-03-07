@@ -11,12 +11,17 @@
         stdout-path = "serial0";
     };
 
+	aliases {
+		serial0 = &uart0;
+		eth0 = &axi_eth_0;
+	};
+
     bootram@60000000 {
         compatible = "cyy,bootram";
         reg = <0x0 0x60000000 0x0 0x10000>;
     };
 
-    uartlite_0@60100000 {
+    uart0: uartlite_0@60100000 {
         compatible = "xlnx,axi-uartlite-1.02.a", "xlnx,xps-uartlite-1.00.a";
         reg = <0x0 0x60100000 0x0 0x1000>;
         interrupt-parent = <&L5>;
@@ -123,7 +128,7 @@
     };
     L10: memory@80000000 {
         device_type = "memory";
-        reg = <0x0 0x80000000 0x1 0x0>;
+        reg = <0x0 0x80000000 0x0 0x80000000>;
     };
     L14: soc {
         #address-cells = <2>;
