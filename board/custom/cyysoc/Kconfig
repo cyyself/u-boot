@@ -13,12 +13,11 @@ config SYS_CONFIG_NAME
 	default "cyysoc"
 
 config SYS_TEXT_BASE
-	default 0x60000000
+	default 0x80000000
 
 config BOARD_SPECIFIC_OPTIONS # dummy
 	def_bool y
 	select GENERIC_RISCV
-	imply SMP
 	imply XILINX_AXIEMAC
 	imply XILINX_UARTLITE
 

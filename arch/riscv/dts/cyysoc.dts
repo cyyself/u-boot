@@ -13,7 +13,6 @@
 
 	aliases {
 		serial0 = &uart0;
-		eth0 = &axi_eth_0;
 	};
 
     bootram@60000000 {
@@ -33,33 +32,13 @@
         #address-cells = <2>;
         #size-cells = <2>;
         #dma-cells = <1>;
-        compatible = "xlnx,axi-eth-dma";  // do not set to "xlnx,axi-dma-1.00.a"
-        reg = <0x0 0x60300000 0x0 0x1000>;
+        compatible = "xlnx,axi-eth-dma";
+        reg = <0x0 0x60300000 0x0 0x100000>;
         interrupt-parent = <&L5>;
         interrupts = <4 3>;
-        xlnx,addrwidth = <64>;
-        dma-ranges = <0 0 0xffffffff>; // <0 0 0 0 0xffffffff 0xffffffff>;
-        clocks = <&L0>;
-        clock-names = "s_axi_lite_aclk";
-        dma-channel@60300030 {
-            reg = <0x0 0x60300030 0x0 0x1000>;
-            compatible = "xlnx,axi-dma-s2mm-channel";
-            interrupt-parent = <&L5>;
-            interrupts = <3>;
-            xlnx,datawidth = <64>;
-            xlnx,include-dre;
-        };
-        dma-channel@60300000 {
-            reg = <0x0 0x60300000 0x0 0x1000>;
-            compatible = "xlnx,axi-dma-mm2s-channel";
-            interrupt-parent = <&L5>;
-            interrupts = <4>;
-            xlnx,datawidth = <64>;
-            xlnx,include-dre;
-        };
     };
 
-    axi_eth_0: ethernet@60200000 {
+    eth0: ethernet@60200000 {
         axistream-connected = <&axi_eth_0_dma>;
         compatible = "xlnx,axi-ethernet-1.00.a";
         device_type = "network";
@@ -67,20 +46,15 @@
         interrupts = <2>;
         phy-handle = <&axi_eth_phy>;
         phy-mode = "internal";
-        reg = <0x0 0x60200000 0x0 0x40000>;
-        clocks = <&L0>;
+        reg = <0x0 0x60200000 0x0 0x100000>;
         mac-address = [ac 67 1c ba 82 58];
-        xlnx,include-dre;
-        xlnx,rxcsum = <0x0>;
-        xlnx,rxmem = <0>;
-        xlnx,txcsum = <0x0>;
 
         fixed-link {
             speed = <1000>;
             full-duplex;
         };
 
-        axi_eth_0_mdio: mdio {
+        eth_0: mdio {
             #address-cells = <1>;
             #size-cells = <0>;
             axi_eth_phy: phy@1 {
