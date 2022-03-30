@@ -68,25 +68,31 @@
 	L18: cpus {
 		#address-cells = <1>;
 		#size-cells = <0>;
-		timebase-frequency = <80000000>;
+		timebase-frequency = <100000000>;
 		L4: cpu@0 {
 			clock-frequency = <0>;
 			compatible = "sifive,rocket0", "riscv";
 			d-cache-block-size = <64>;
 			d-cache-sets = <64>;
-			d-cache-size = <4096>;
+			d-cache-size = <16384>;
+			d-tlb-sets = <1>;
+			d-tlb-size = <32>;
 			device_type = "cpu";
 			hardware-exec-breakpoint-count = <1>;
 			i-cache-block-size = <64>;
 			i-cache-sets = <64>;
-			i-cache-size = <4096>;
+			i-cache-size = <16384>;
+			i-tlb-sets = <1>;
+			i-tlb-size = <32>;
+			mmu-type = "riscv,sv39";
 			next-level-cache = <&L13>;
 			reg = <0x0>;
 			riscv,isa = "rv64imac";
 			riscv,pmpgranularity = <4>;
 			riscv,pmpregions = <8>;
 			status = "okay";
-			timebase-frequency = <80000000>;
+			timebase-frequency = <100000000>;
+			tlb-split;
 			L2: interrupt-controller {
 				#interrupt-cells = <1>;
 				compatible = "riscv,cpu-intc";
@@ -98,19 +104,25 @@
 			compatible = "sifive,rocket0", "riscv";
 			d-cache-block-size = <64>;
 			d-cache-sets = <64>;
-			d-cache-size = <4096>;
+			d-cache-size = <16384>;
+			d-tlb-sets = <1>;
+			d-tlb-size = <32>;
 			device_type = "cpu";
 			hardware-exec-breakpoint-count = <1>;
 			i-cache-block-size = <64>;
 			i-cache-sets = <64>;
-			i-cache-size = <4096>;
+			i-cache-size = <16384>;
+			i-tlb-sets = <1>;
+			i-tlb-size = <32>;
+			mmu-type = "riscv,sv39";
 			next-level-cache = <&L13>;
 			reg = <0x1>;
 			riscv,isa = "rv64imac";
 			riscv,pmpgranularity = <4>;
 			riscv,pmpregions = <8>;
 			status = "okay";
-			timebase-frequency = <80000000>;
+			timebase-frequency = <100000000>;
+			tlb-split;
 			L5: interrupt-controller {
 				#interrupt-cells = <1>;
 				compatible = "riscv,cpu-intc";
@@ -120,7 +132,7 @@
 	};
 	L13: memory@80000000 {
 		device_type = "memory";
-		reg = <0x80000000 0x10000000>;
+		reg = <0x80000000 0x80000000>;
 	};
 	L17: soc {
 		#address-cells = <1>;
@@ -152,7 +164,7 @@
 			#interrupt-cells = <1>;
 			compatible = "riscv,plic0";
 			interrupt-controller;
-			interrupts-extended = <&L2 11 &L5 11>;
+			interrupts-extended = <&L2 11 &L2 9 &L5 11 &L5 9>;
 			reg = <0xc000000 0x4000000>;
 			reg-names = "control";
 			riscv,max-priority = <7>;
@@ -171,7 +183,7 @@
 		};
 		L0: subsystem_pbus_clock {
 			#clock-cells = <0>;
-			clock-frequency = <80000000>;
+			clock-frequency = <100000000>;
 			clock-output-names = "subsystem_pbus_clock";
 			compatible = "fixed-clock";
 		};
