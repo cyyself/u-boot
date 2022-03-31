@@ -139,6 +139,14 @@ static void _exit_trap(ulong code, ulong epc, ulong tval, struct pt_regs *regs)
 		"Reserved",
 		"Store/AMO page fault",
 	};
+	
+	unsigned long hartid;
+	asm volatile ("csrr %0, mhartid" : "=r"(hartid));
+	if (hartid != 0) {
+		asm volatile ("fence");
+		asm volatile ("fence.i");
+		((void (*)(unsigned long,unsigned long))(uint64_t)CONFIG_SYS_SDRAM_BASE)(hartid,0);
+	}
 
 	if (resume) {
 		resume->code = code;
