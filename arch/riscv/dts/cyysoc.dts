@@ -31,16 +31,12 @@
         xlnx,use-parity = <0>;
     };
 
-	axi_eth_0_dma: dma@60300000 {
-        #address-cells = <2>;
-        #size-cells = <2>;
-        #dma-cells = <1>;
-        compatible = "xlnx,axi-eth-dma";
+    axi_eth_0_dma: eth_dma@60300000 {
+		compatible = "xlnx,eth-dma";
         reg = <0x60300000 0x100000>;
         interrupt-parent = <&L8>;
         interrupts = <4 3>;
     };
-
     eth0: ethernet@60200000 {
         axistream-connected = <&axi_eth_0_dma>;
         compatible = "xlnx,axi-ethernet-1.00.a";
@@ -49,8 +45,8 @@
         interrupts = <2>;
         phy-handle = <&axi_eth_phy>;
         phy-mode = "internal";
-        reg = <0x60200000 0x100000>;
-        mac-address = [ac 67 1c ba 82 58];
+		reg = <0x60200000 0x100000>;
+		mac-address = [ac 67 1c ba 82 58];
 
         fixed-link {
             speed = <1000>;
