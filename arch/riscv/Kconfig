@@ -49,6 +49,9 @@ config TARGET_XILINX_MBV
 config TARGET_CYYSOC
 	bool "Support cyy SoC"
 
+config TARGET_CYYSOC32
+	bool "Support cyy SoC"
+
 endchoice
 
 config SYS_ICACHE_OFF
