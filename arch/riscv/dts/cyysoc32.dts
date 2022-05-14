@@ -59,7 +59,6 @@
 		};
 	};
 
-
 	L15: cpus {
 		#address-cells = <1>;
 		#size-cells = <0>;
@@ -79,10 +78,10 @@
 			i-cache-size = <16384>;
 			i-tlb-sets = <1>;
 			i-tlb-size = <32>;
-			mmu-type = "riscv,sv39";
+			mmu-type = "riscv,sv32";
 			next-level-cache = <&L10>;
 			reg = <0x0>;
-			riscv,isa = "rv64imafdc";
+			riscv,isa = "rv32imafc";
 			riscv,pmpgranularity = <4>;
 			riscv,pmpregions = <8>;
 			status = "okay";

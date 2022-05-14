@@ -23,3 +23,29 @@ config BOARD_SPECIFIC_OPTIONS # dummy
 	imply XIP
 	imply SMP
 endif
+
+if TARGET_CYYSOC32
+
+config SYS_BOARD
+	default "cyysoc"
+
+config SYS_VENDOR
+	default "custom"
+
+config SYS_CPU
+	default "generic"
+
+config SYS_CONFIG_NAME
+	default "cyysoc"
+
+config SYS_TEXT_BASE
+	default 0x60000000
+
+config BOARD_SPECIFIC_OPTIONS # dummy
+	def_bool y
+	select GENERIC_RISCV
+	imply XILINX_AXIEMAC
+	imply XILINX_UARTLITE
+	imply XIP
+	imply SMP
+endif

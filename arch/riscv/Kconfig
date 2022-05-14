@@ -34,6 +34,9 @@ config TARGET_OPENPITON_RISCV64
 config TARGET_CYYSOC
 	bool "Support cyy SoC"
 
+config TARGET_CYYSOC32
+	bool "Support cyy SoC"
+
 endchoice
 
 config SYS_ICACHE_OFF
