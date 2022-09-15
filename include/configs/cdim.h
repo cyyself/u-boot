@@ -16,7 +16,7 @@
 #define CONFIG_SYS_MIPS_CACHE_MODE	CONF_CM_CACHABLE_NONCOHERENT
 
 /* Time Measuring */
-#define TRIVIALMIPS_NSCSCC_TIMER_ADDR		0xbfd0e000
+#define TRIVIALMIPS_NSCSCC_TIMER_ADDR		0xbfafe000
 
 /*----------------------------------------------------------------------
  * Memory Layout
@@ -51,7 +51,7 @@
 // serial configuration
 #define CONFIG_CONS_INDEX 1
 #define CONFIG_SYS_NS16550_COM1 0xbfe40000
-#define CONFIG_SYS_NS16550_CLK 166666666
+#define CONFIG_SYS_NS16550_CLK 66666666
 #define CONFIG_SYS_NS16550_IER 0
 
 
