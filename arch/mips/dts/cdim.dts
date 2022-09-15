@@ -36,7 +36,7 @@
 
     bus_clk: bus_clk {
         compatible = "fixed-clock";
-        clock-frequency = <66666666>;
+        clock-frequency = <100000000>;
         #clock-cells = <0>;
     };
 
