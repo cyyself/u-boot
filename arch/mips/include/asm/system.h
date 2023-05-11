@@ -275,11 +275,13 @@ static inline void instruction_hazard_barrier(void)
 {
 	unsigned long tmp;
 
+#if defined(CONFIG_SUPPORTS_CPU_MIPS32_R2) || defined(CONFIG_SUPPORTS_CPU_MIPS64_R2)
 	asm volatile(
 	__stringify(PTR_LA) "\t%0, 1f\n"
 	"	jr.hb	%0\n"
 	"1:	.insn"
 	: "=&r"(tmp));
+#endif
 }
 
 #ifdef CONFIG_SYS_NONCACHED_MEMORY
