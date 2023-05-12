@@ -1,0 +1,18 @@
+if TARGET_CDIM
+
+config SYS_BOARD
+    default "cdim"
+
+config SYS_VENDOR
+    default "custom"
+
+config SYS_CONFIG_NAME
+    default "cdim"
+
+config BOARD_SPECIFIC_OPTIONS # dummy
+    def_bool y
+    imply XILINX_EMACLITE
+    imply PHY_SMSC
+    imply SYS_NS16550
+
+endif
