@@ -13,11 +13,12 @@
 #include <linux/err.h>
 
 /* mtime register */
-#define MTIME_REG(base)			((ulong)(base) + 0xbff8)
+#define MTIME_OFFSET			0xbff8
+#define MTIME_REG(base)			((ulong)(base) + MTIME_OFFSET)
 
 static u64 notrace sifive_clint_get_count(struct udevice *dev)
 {
-	return readq((void __iomem *)MTIME_REG(dev_get_priv(dev)));
+	return readq((void __iomem *)dev_get_priv(dev));
 }
 
 #if CONFIG_IS_ENABLED(RISCV_MMODE) && IS_ENABLED(CONFIG_TIMER_EARLY)
@@ -45,7 +46,7 @@ static const struct timer_ops sifive_clint_ops = {
 
 static int sifive_clint_probe(struct udevice *dev)
 {
-	dev_set_priv(dev, dev_read_addr_ptr(dev));
+	dev_set_priv(dev, dev_read_addr_ptr(dev) + dev_get_driver_data(dev));
 	if (!dev_get_priv(dev))
 		return -EINVAL;
 
@@ -53,9 +54,9 @@ static int sifive_clint_probe(struct udevice *dev)
 }
 
 static const struct udevice_id sifive_clint_ids[] = {
-	{ .compatible = "riscv,clint0" },
-	{ .compatible = "sifive,clint0" },
-	{ }
+	{ .compatible = "riscv,clint0", .data = MTIME_OFFSET },
+	{ .compatible = "sifive,clint0", .data = MTIME_OFFSET },
+	{ .compatible = "riscv,aclint-mtimer" }
 };
 
 U_BOOT_DRIVER(sifive_clint) = {
