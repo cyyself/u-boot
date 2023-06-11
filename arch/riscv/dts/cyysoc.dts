@@ -176,7 +176,7 @@
 		L10: mtimer@2008000 {
 			compatible = "riscv,aclint-mtimer";
 			interrupts-extended = <&L2 7 &L5 7>;
-			reg = <0x2008000 0x8100>;
+			reg = <0x2010000 0x100>, <0x2008000 0x8000>;
 			reg-names = "control";
 		};
 		L16: rom@10000 {
