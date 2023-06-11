@@ -26,6 +26,42 @@
 		xlnx,use-parity = <0>;
 	};
 
+	axi_eth_0_dma: eth_dma@60300000 {
+		compatible = "xlnx,eth-dma";
+		reg = <0x60300000 0x100000>;
+		interrupt-parent = <&L8>;
+		interrupts = <4 3>;
+	};
+
+	eth0: ethernet@60200000 {
+		axistream-connected = <&axi_eth_0_dma>;
+		compatible = "xlnx,axi-ethernet-1.00.a";
+		device_type = "network";
+		interrupt-parent = <&L8>;
+		interrupts = <2>;
+		phy-handle = <&axi_eth_phy>;
+		phy-mode = "rgmii-rxid"; // phy-mode = "internal";
+		reg = <0x60200000 0x100000>;
+		mac-address = [ac 67 1c ba 82 58];
+
+		/*
+		fixed-link {
+			speed = <1000>;
+			full-duplex;
+		};
+		 */
+
+		eth_0: mdio {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			axi_eth_phy: phy@7 { // axi_eth_phy: phy@1 {
+				device_type = "ethernet-phy";
+				reg = <7>; // reg = <1>;
+				// xlnx,phy-type = <0x5>;
+			};
+		};
+	};
+
 	L19: cpus {
 		#address-cells = <1>;
 		#size-cells = <0>;
