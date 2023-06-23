@@ -3,9 +3,8 @@
 / {
 	#address-cells = <1>;
 	#size-cells = <1>;
-	compatible = "freechips,rocketchip-unknown-dev";
-	model = "freechips,rocketchip-unknown";
-
+	compatible = "ucb-bar,chipyard-dev";
+	model = "ucb-bar,chipyard";
 
 	chosen {
 		bootargs = "earlycon=uartlite,mmio,0x60100000 console=ttyUL0 rdinit=/sbin/init";
@@ -63,91 +62,109 @@
 		};
 	};
 
-
-	L18: cpus {
+	L21: cpus {
 		#address-cells = <1>;
 		#size-cells = <0>;
 		timebase-frequency = <100000000>;
-		L4: cpu@0 {
-			clock-frequency = <100000000>;
-			compatible = "sifive,rocket0", "riscv";
+		L5: cpu@0 {
+			clock-frequency = <0>;
+			compatible = "ucb-bar,boom0", "riscv";
 			d-cache-block-size = <64>;
 			d-cache-sets = <64>;
 			d-cache-size = <16384>;
 			d-tlb-sets = <1>;
-			d-tlb-size = <32>;
+			d-tlb-size = <8>;
 			device_type = "cpu";
-			hardware-exec-breakpoint-count = <1>;
+			hardware-exec-breakpoint-count = <0>;
 			i-cache-block-size = <64>;
 			i-cache-sets = <64>;
 			i-cache-size = <16384>;
 			i-tlb-sets = <1>;
 			i-tlb-size = <32>;
 			mmu-type = "riscv,sv39";
-			next-level-cache = <&L13>;
+			next-level-cache = <&L3>;
 			reg = <0x0>;
-			riscv,isa = "rv64imacZicsr_Zifencei_Zihpm_Xrocket";
+			riscv,isa = "rv64imafdczicsr_zifencei_zihpm";
 			riscv,pmpgranularity = <4>;
 			riscv,pmpregions = <8>;
 			status = "okay";
 			timebase-frequency = <100000000>;
 			tlb-split;
-			L2: interrupt-controller {
+			L4: interrupt-controller {
 				#interrupt-cells = <1>;
 				compatible = "riscv,cpu-intc";
 				interrupt-controller;
 			};
 		};
 		L7: cpu@1 {
-			clock-frequency = <100000000>;
-			compatible = "sifive,rocket0", "riscv";
+			clock-frequency = <0>;
+			compatible = "ucb-bar,boom0", "riscv";
 			d-cache-block-size = <64>;
 			d-cache-sets = <64>;
 			d-cache-size = <16384>;
 			d-tlb-sets = <1>;
-			d-tlb-size = <32>;
+			d-tlb-size = <8>;
 			device_type = "cpu";
-			hardware-exec-breakpoint-count = <1>;
+			hardware-exec-breakpoint-count = <0>;
 			i-cache-block-size = <64>;
 			i-cache-sets = <64>;
 			i-cache-size = <16384>;
 			i-tlb-sets = <1>;
 			i-tlb-size = <32>;
 			mmu-type = "riscv,sv39";
-			next-level-cache = <&L13>;
+			next-level-cache = <&L3>;
 			reg = <0x1>;
-			riscv,isa = "rv64imacZicsr_Zifencei_Zihpm_Xrocket";
+			riscv,isa = "rv64imafdczicsr_zifencei_zihpm";
 			riscv,pmpgranularity = <4>;
 			riscv,pmpregions = <8>;
 			status = "okay";
 			timebase-frequency = <100000000>;
 			tlb-split;
-			L5: interrupt-controller {
+			L6: interrupt-controller {
 				#interrupt-cells = <1>;
 				compatible = "riscv,cpu-intc";
 				interrupt-controller;
 			};
 		};
 	};
-	L13: memory@80000000 {
+	L23: htif {
+		compatible = "ucb,htif0";
+	};
+	L14: memory@80000000 {
 		device_type = "memory";
 		reg = <0x80000000 0x80000000>;
 	};
-	L17: soc {
+	L20: soc {
 		#address-cells = <1>;
 		#size-cells = <1>;
-		compatible = "freechips,rocketchip-unknown-soc", "simple-bus";
+		compatible = "ucb-bar,chipyard-soc", "simple-bus";
 		ranges;
+		L3: cache-controller@2010000 {
+			cache-block-size = <64>;
+			cache-level = <2>;
+			cache-sets = <1024>;
+			cache-size = <524288>;
+			cache-unified;
+			compatible = "sifive,inclusivecache0", "cache";
+			next-level-cache = <&L14>;
+			reg = <0x2010000 0x1000>;
+			reg-names = "control";
+			sifive,mshr-count = <7>;
+		};
 		L9: clint@2000000 {
 			compatible = "riscv,clint0";
-			interrupts-extended = <&L2 3 &L2 7 &L5 3 &L5 7>;
+			interrupts-extended = <&L4 3 &L4 7 &L6 3 &L6 7>;
 			reg = <0x2000000 0x10000>;
+			reg-names = "control";
+		};
+		L17: clock-gater@100000 {
+			reg = <0x100000 0x1000>;
 			reg-names = "control";
 		};
 		L10: debug-controller@0 {
 			compatible = "sifive,debug-013", "riscv,debug-013";
 			debug-attach = "dmi";
-			interrupts-extended = <&L2 65535 &L5 65535>;
+			interrupts-extended = <&L4 65535 &L6 65535>;
 			reg = <0x0 0x1000>;
 			reg-names = "control";
 		};
@@ -163,28 +180,38 @@
 			#interrupt-cells = <1>;
 			compatible = "riscv,plic0";
 			interrupt-controller;
-			interrupts-extended = <&L2 11 &L2 9 &L5 11 &L5 9>;
+			interrupts-extended = <&L4 11 &L4 9 &L6 11 &L6 9>;
 			reg = <0xc000000 0x4000000>;
 			reg-names = "control";
 			riscv,max-priority = <7>;
 			riscv,ndev = <4>;
 		};
-		L14: mmio-port-axi4@60000000 {
+		L15: mmio-port-axi4@60000000 {
 			#address-cells = <1>;
 			#size-cells = <1>;
 			compatible = "simple-bus";
 			ranges = <0x60000000 0x60000000 0x20000000>;
 		};
-		L15: rom@10000 {
+		L16: rom@10000 {
 			compatible = "sifive,rom0";
 			reg = <0x10000 0x10000>;
 			reg-names = "mem";
+		};
+		L2: subsystem_mbus_clock {
+			#clock-cells = <0>;
+			clock-frequency = <100000000>;
+			clock-output-names = "subsystem_mbus_clock";
+			compatible = "fixed-clock";
 		};
 		L0: subsystem_pbus_clock {
 			#clock-cells = <0>;
 			clock-frequency = <100000000>;
 			clock-output-names = "subsystem_pbus_clock";
 			compatible = "fixed-clock";
+		};
+		L18: tile-reset-setter@110000 {
+			reg = <0x110000 0x1000>;
+			reg-names = "control";
 		};
 	};
 };
