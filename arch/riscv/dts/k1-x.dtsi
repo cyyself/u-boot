@@ -28,8 +28,11 @@
 			device_type = "cpu";
 			reg = <0>;
 			status = "okay";
-			riscv,isa = "rv64imafdcvsu_zicsr_zifencei_zicbom_zihintpause_zba_zbb_zbc_zbs_svpbmt_sstc_sscofpmf";
+			riscv,isa = "rv64imafdcv_zicbom_zicbop_zicboz_zicond_zihintpause_zfh_zba_zbb_zbc_zbs_zvfh_sdtrig_svpbmt_sstc_sscofpmf";
 			mmu-type = "riscv,sv39";
+			riscv,cbom-block-size = <64>;
+			riscv,cbop-block-size = <64>;
+			riscv,cboz-block-size = <64>;
 
 			cpu0_intc: interrupt-controller {
 				#interrupt-cells = <1>;
@@ -42,8 +45,11 @@
 			device_type = "cpu";
 			reg = <1>;
 			status = "okay";
-			riscv,isa = "rv64imafdcvsu_zicsr_zifencei_zicbom_zihintpause_zba_zbb_zbc_zbs_svpbmt_sstc_sscofpmf";
+			riscv,isa = "rv64imafdcv_zicbom_zicbop_zicboz_zicond_zihintpause_zfh_zba_zbb_zbc_zbs_zvfh_sdtrig_svpbmt_sstc_sscofpmf";
 			mmu-type = "riscv,sv39";
+			riscv,cbom-block-size = <64>;
+			riscv,cbop-block-size = <64>;
+			riscv,cboz-block-size = <64>;
 
 			cpu1_intc: interrupt-controller {
 				#interrupt-cells = <1>;
@@ -56,8 +62,11 @@
 			device_type = "cpu";
 			reg = <2>;
 			status = "okay";
-			riscv,isa = "rv64imafdcvsu_zicsr_zifencei_zicbom_zihintpause_zba_zbb_zbc_zbs_svpbmt_sstc_sscofpmf";
+			riscv,isa = "rv64imafdcv_zicbom_zicbop_zicboz_zicond_zihintpause_zfh_zba_zbb_zbc_zbs_zvfh_sdtrig_svpbmt_sstc_sscofpmf";
 			mmu-type = "riscv,sv39";
+			riscv,cbom-block-size = <64>;
+			riscv,cbop-block-size = <64>;
+			riscv,cboz-block-size = <64>;
 
 			cpu2_intc: interrupt-controller {
 				#interrupt-cells = <1>;
@@ -70,8 +79,11 @@
 			device_type = "cpu";
 			reg = <3>;
 			status = "okay";
-			riscv,isa = "rv64imafdcvsu_zicsr_zifencei_zicbom_zihintpause_zba_zbb_zbc_zbs_svpbmt_sstc_sscofpmf";
+			riscv,isa = "rv64imafdcv_zicbom_zicbop_zicboz_zicond_zihintpause_zfh_zba_zbb_zbc_zbs_zvfh_sdtrig_svpbmt_sstc_sscofpmf";
 			mmu-type = "riscv,sv39";
+			riscv,cbom-block-size = <64>;
+			riscv,cbop-block-size = <64>;
+			riscv,cboz-block-size = <64>;
 
 			cpu3_intc: interrupt-controller {
 				#interrupt-cells = <1>;
@@ -84,8 +96,11 @@
 			device_type = "cpu";
 			reg = <4>;
 			status = "okay";
-			riscv,isa = "rv64imafdcvsu_zicsr_zifencei_zicbom_zihintpause_zba_zbb_zbc_zbs_svpbmt_sstc_sscofpmf";
+			riscv,isa = "rv64imafdcv_zicbom_zicbop_zicboz_zicond_zihintpause_zfh_zba_zbb_zbc_zbs_zvfh_sdtrig_svpbmt_sstc_sscofpmf";
 			mmu-type = "riscv,sv39";
+			riscv,cbom-block-size = <64>;
+			riscv,cbop-block-size = <64>;
+			riscv,cboz-block-size = <64>;
 
 			cpu4_intc: interrupt-controller {
 				#interrupt-cells = <1>;
@@ -98,8 +113,11 @@
 			device_type = "cpu";
 			reg = <5>;
 			status = "okay";
-			riscv,isa = "rv64imafdcvsu_zicsr_zifencei_zicbom_zihintpause_zba_zbb_zbc_zbs_svpbmt_sstc_sscofpmf";
+			riscv,isa = "rv64imafdcv_zicbom_zicbop_zicboz_zicond_zihintpause_zfh_zba_zbb_zbc_zbs_zvfh_sdtrig_svpbmt_sstc_sscofpmf";
 			mmu-type = "riscv,sv39";
+			riscv,cbom-block-size = <64>;
+			riscv,cbop-block-size = <64>;
+			riscv,cboz-block-size = <64>;
 
 			cpu5_intc: interrupt-controller {
 				#interrupt-cells = <1>;
@@ -112,8 +130,11 @@
 			device_type = "cpu";
 			reg = <6>;
 			status = "okay";
-			riscv,isa = "rv64imafdcvsu_zicsr_zifencei_zicbom_zihintpause_zba_zbb_zbc_zbs_svpbmt_sstc_sscofpmf";
+			riscv,isa = "rv64imafdcv_zicbom_zicbop_zicboz_zicond_zihintpause_zfh_zba_zbb_zbc_zbs_zvfh_sdtrig_svpbmt_sstc_sscofpmf";
 			mmu-type = "riscv,sv39";
+			riscv,cbom-block-size = <64>;
+			riscv,cbop-block-size = <64>;
+			riscv,cboz-block-size = <64>;
 
 			cpu6_intc: interrupt-controller {
 				#interrupt-cells = <1>;
@@ -126,8 +147,11 @@
 			device_type = "cpu";
 			reg = <7>;
 			status = "okay";
-			riscv,isa = "rv64imafdcvsu_zicsr_zifencei_zicbom_zihintpause_zba_zbb_zbc_zbs_svpbmt_sstc_sscofpmf";
+			riscv,isa = "rv64imafdcv_zicbom_zicbop_zicboz_zicond_zihintpause_zfh_zba_zbb_zbc_zbs_zvfh_sdtrig_svpbmt_sstc_sscofpmf";
 			mmu-type = "riscv,sv39";
+			riscv,cbom-block-size = <64>;
+			riscv,cbop-block-size = <64>;
+			riscv,cboz-block-size = <64>;
 
 			cpu7_intc: interrupt-controller {
 				#interrupt-cells = <1>;
