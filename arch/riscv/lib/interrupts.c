@@ -145,7 +145,7 @@ static void _exit_trap(ulong code, ulong epc, ulong tval, struct pt_regs *regs)
 	if (hartid != 0) {
 		asm volatile ("fence");
 		asm volatile ("fence.i");
-		((void (*)(unsigned long,unsigned long))(uint64_t)CONFIG_SYS_SDRAM_BASE)(hartid,0);
+		((void (*)(unsigned long,unsigned long))(uint64_t)0x80000000)(hartid,0);
 	}
 
 	if (resume) {

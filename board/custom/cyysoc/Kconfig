@@ -12,7 +12,7 @@ config SYS_CPU
 config SYS_CONFIG_NAME
 	default "cyysoc"
 
-config SYS_TEXT_BASE
+config TEXT_BASE
 	default 0x60000000
 
 config BOARD_SPECIFIC_OPTIONS # dummy
@@ -38,7 +38,7 @@ config SYS_CPU
 config SYS_CONFIG_NAME
 	default "cyysoc"
 
-config SYS_TEXT_BASE
+config TEXT_BASE
 	default 0x60000000
 
 config BOARD_SPECIFIC_OPTIONS # dummy
