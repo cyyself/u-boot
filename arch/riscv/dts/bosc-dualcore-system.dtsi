@@ -1,0 +1,260 @@
+/dts-v1/;
+
+/ {
+    #size-cells = <0x02>;
+    compatible = "xiangshan,fpga";
+    #address-cells = <0x02>;
+    model = "xiangshan,fpga";
+
+    chosen {
+        stdout-path = "/soc/serial0@310b0000";
+        bootargs = "earlycon console=ttyS0,460800n8 debug ignore_loglevel nvme_core.default_ps_max_latency_us=0 rdinit=/sbin/init";
+    };
+
+    ddr: memory@80000000 {
+        device_type = "memory";
+        reg = <0x00 0x80000000 0x02 0x00000000>;
+    };
+
+    clk0: misc_clk_0 {
+        compatible = "fixed-clock";
+        clock-frequency = <25000000>;
+        #clock-cells = <0x00>;
+    };
+
+    axi_clk: axi_clk {
+        compatible = "fixed-clock";
+        clock-frequency = <50000000>;
+        #clock-cells = <0x00>;
+    };
+
+    ref_clk: ref_clk {
+        compatible = "fixed-clock";
+        clock-frequency = <300000000>;
+        #clock-cells = <0x00>;
+    };
+
+    gtx_clk: gtx_clk {
+        compatible = "fixed-clock";
+        clock-frequency = <125000000>;
+        #clock-cells = <0x00>;
+    };
+
+    cpus {
+        #address-cells = <1>;
+        #size-cells = <0>;
+        timebase-frequency = <1000000>;//1MHz
+        cpu0: cpu@0 {
+            compatible = "riscv";
+            device_type = "cpu";
+            mmu-type = "riscv,sv48";
+            reg = <0>;
+            riscv,isa = "rv64imafdcvh";
+            riscv,isa-base = "rv64i";
+            riscv,isa-extensions = "i", "m", "a", "f", "d", "c", "v", "h", "sha", "sscofpmf", "sstc", "supm", "svpbmt", "svinval", "zawrs", "zba", "zbb", "zbs", "zcb", "zcmop", "zfa", "zfhmin", "zicntr", "zicond", "zicsr", "zifencei", "zihpm", "zihintpause", "zihintntl", "zimop", "zkt", "zvbb", "zvfhmin", "zvkt";
+
+            cpu0_intc: interrupt-controller {
+                #address-cells = <0>;
+                #interrupt-cells = <1>;
+                compatible = "riscv,cpu-intc";
+                interrupt-controller;
+            };
+        };
+
+        cpu1: cpu@1 {
+            compatible = "riscv";
+            device_type = "cpu";
+            mmu-type = "riscv,sv48";
+            reg = <1>;
+            riscv,isa = "rv64imafdcvh";
+            riscv,isa-base = "rv64i";
+            riscv,isa-extensions = "i", "m", "a", "f", "d", "c", "v", "h", "sha", "sscofpmf", "sstc", "supm", "svpbmt", "svinval", "zawrs", "zba", "zbb", "zbs", "zcb", "zcmop", "zfa", "zfhmin", "zicntr", "zicond", "zicsr", "zifencei", "zihpm", "zihintpause", "zihintntl", "zimop", "zkt", "zvbb", "zvfhmin", "zvkt";
+
+            cpu1_intc: interrupt-controller {
+                #address-cells = <0>;
+                #interrupt-cells = <1>;
+                compatible = "riscv,cpu-intc";
+                interrupt-controller;
+            };
+        };
+    };
+
+    soc {
+        #size-cells = <0x02>;
+        compatible = "freechips,rocketchip-unknown-soc", "simple-bus";
+        #address-cells = <0x02>;
+        ranges;
+
+        clint@38000000 {
+            compatible = "riscv,clint0";
+            interrupts-extended = <&cpu0_intc 3 &cpu0_intc 7 &cpu1_intc 3 &cpu1_intc 7>;
+            reg = <0x0 0x38000000 0x0 0x10000>;
+            reg-names = "control";
+            clock-frequency-mhz = <1>;
+        };
+
+        PLIC: interrupt-controller@3c000000 {
+            compatible = "riscv,plic0";
+            riscv,max-priority = <0x07>;
+            #address-cells = <0>;
+            #interrupt-cells = <0x01>;
+            reg = <0x00 0x3c000000 0x00 0x4000000>;
+            interrupt-controller;
+            reg-names = "control";
+            interrupts-extended = <&cpu0_intc 11 &cpu0_intc 9 &cpu1_intc 11 &cpu1_intc 9>;
+            riscv,ndev = <64>;
+        };
+
+
+        pcie_0: pcie@48000000 {
+            #size-cells = <2>;
+            #address-cells = <3>;
+            #interrupt-cells = <1>;
+            clocks = <&clk0 &clk0>;
+            clock-names = "sys_clk", "sys_clk_gt";
+            device_type = "pci";
+            interrupt-names = "misc", "msi0", "msi1";
+            compatible = "xlnx,xdma-host-3.00";
+            // compatible = "xlnx,axi-pcie-host-1.00.a";
+            reg = <0x00 0x48000000 0x00 0x2000000>;
+            ranges = <0x3000000 0x00 0x20000000 0x00 0x40000000 0x00 0x8000000>;
+            interrupt-parent = <&PLIC>;
+            interrupts = <0x35 0x34 0x33>;
+            interrupt-map = <0 0 0 1 &pcie_intc_0 1
+                     0 0 0 2 &pcie_intc_0 2
+                     0 0 0 3 &pcie_intc_0 3
+                     0 0 0 4 &pcie_intc_0 4>;
+            interrupt-map-mask = <0 0 0 7>;
+            status = "disabled";
+
+            pcie_intc_0: interrupt-controller {
+                #address-cells = <0>;
+                #interrupt-cells = <1>;
+                interrupt-controller;
+            };
+        };
+
+        serial0@310b0000 {
+            compatible = "ns16550a";
+            reg = <0x0 0x310b0000 0x0 0x00010000>;
+            reg-shift = <0x02>;
+            reg-offset = <0x1000>;
+            interrupt-parent = <&PLIC>;
+            interrupts = <0x28>;
+            clock-frequency = <50000000>;
+            current-speed = <460800>;
+            status = "okay";
+        };
+
+        spi0: spi@31000000 {
+            #address-cells = <1>;
+            #size-cells = <0>;
+
+            compatible = "xlnx,axi-quad-spi-1.00.a";
+            interrupt-parent = <&PLIC>;
+            interrupts = <0x37>;
+            reg = <0x0 0x31000000 0x0 0x10000>;
+            xlnx,num-ss-bits = <0x1>;
+            xlnx,num-transfer-bits = <8>;
+            status = "disabled";
+
+            mmc-slot@0 {
+                #address-cells = <1>;
+                #size-cells = <0>;
+
+                compatible = "mmc-spi-slot";
+                reg = <0>;
+                spi-max-frequency = <25000000>;
+                voltage-ranges = <1700 3400>;
+                broken-cd;
+                status = "okay";
+            };
+        };
+
+        axi_ethernet: ethernet@40c00000 {
+            compatible = "xlnx,axi-ethernet-1.00.a";
+            reg = <0x0 0x40c00000 0x0 0x40000>, <0x0 0x41e00000 0x0 0x10000>;
+            interrupt-parent = <&PLIC>;
+            interrupts = <0x3 0x4 0x1>; // mm2s, s2mm, mac_irq
+            // Don't trust kernel's dt-binding, read the kernel code
+            // Linux v6.19 Validated
+            clock-names = "s_axi_lite_clk", "axis_clk", "ref_clk", "mgt_clk";
+            clocks = <&axi_clk>, <&axi_clk>, <&ref_clk>, <&gtx_clk>;
+            phy-mode = "rgmii-rxid";
+            phy-handle = <&phy1>;
+            xlnx,rxmem = <0x1000>;
+            xlnx,txcsum = <0x0>;
+            xlnx,rxcsum = <0x0>;
+            local-mac-address = [00 0a 35 00 01 22];
+            status = "disabled";
+
+            mdio {
+                #address-cells = <1>;
+                #size-cells = <0>;
+     
+                phy1: ethernet-phy@7 {
+                    device_type = "ethernet-phy";
+                    reg = <7>;
+                };
+            };
+        };
+    };
+
+    pmu {
+        compatible = "riscv,pmu";
+
+        riscv,event-to-mhpmevent = 
+            /* SBI_PMU_HW_CACHE_REFERENCES 3 => H slice0_l2_cache_access */
+            <0x3 0x0 0x5>,
+            /* SBI_PMU_HW_BRANCH_INSTRUCTIONS 5 => F bp_instr */
+            <0x5 0x0 0x21>,
+            /* SBI_PMU_HW_BRANCH_MISSES 6 => F bp_wrong */
+            <0x6 0x0 0x24>,
+            /* SBI_PMU_HW_STALLED_CYCLES_FRONTEND 8 => F ibuffer_hungry */
+            <0x8 0x0 0xf>,
+            /* SBI_PMU_HW_STALLED_CYCLES_BACKEND 9 => B decoder_stall_cycle */
+            <0x9 0x0 0x3>,
+            /* L1D_READ_ACCESS 65536 => M ldu_0_load_s2_in_fire ADD ldu_1_load_s2_in_fire ADD ldu_2_load_s2_in_fire */
+            <0x10000 0x8400 0x1403406>,
+            /* L1D_READ_MISS 65537 => M ldu_0_load_s2_dcache_miss ADD ldu_1_load_s2_dcache_miss ADD ldu_2_load_s2_dcache_miss */
+            <0x10001 0x8400 0x1503807>,
+            /* L1D_WRITE_ACCESS 65538 => M sbuffer_dcache_req_fire */
+            <0x10002 0x0 0x1b>,
+            /* L1D_WRITE_MISS 65539 => M sbuffer_replay_resp_valid */
+            <0x10003 0x0 0x20>,
+            /* L1I_READ_ACCESS 65544 => F ifu_req */
+            <0x10008 0x0 0x2>,
+            /* L1I_READ_MISS 65545 => F ifu_miss */
+            <0x10009 0x0 0x3>,
+            /* LL_READ_ACCESS 65552 => H slice0_l2_cache_access_rd */
+            <0x10010 0x0 0xa>,
+            /* LL_WRITE_ACCESS 65554 => H slice0_l2_cache_access_wr */
+            <0x10012 0x0 0xb>,
+            /* LL_READ_MISS 65553 => H slice0_l2_cache_rd_refill */
+            <0x10011 0x0 0x2>,
+            /* LL_WRITE_MISS 65555 => H slice0_l2_cache_wr_refill */
+            <0x10013 0x0 0x3>,
+            /* DTLB_READ_ACCESS 65560 => M ldu_0_load_s1_in_fire ADD ldu_1_load_s1_in_fire ADD ldu_2_load_s1_in_fire */
+            <0x10018 0x8400 0x1202c04>,
+            /* DTLB_READ_MISS 65561 => M ldu_0_load_s1_tlb_miss ADD ldu_1_load_s1_tlb_miss ADD ldu_2_load_s1_tlb_miss */
+            <0x10019 0x8400 0x1303005>;
+
+        riscv,event-to-mhpmcounters = 
+            <0x3 0x3 0xf8000000>,
+            <0x5 0x8 0x7f8>,
+            <0x10000 0x10003 0x7f80000>,
+            <0x10008 0x10009 0x7f8>,
+            <0x10010 0x10013 0xf8000000>,
+            <0x10018 0x10019 0x7f80000>;
+
+        riscv,raw-event-to-mhpmcounters =
+            /* raw event encoding: [57:56] module, [54:0] xs_event */
+            /* module: 0x0: F, 0x1: C, 0x2: M, 0x3: H */
+            <0x00000000 0x00000000 0x03000000 0x00000000 0x000007f8>,
+            <0x01000000 0x00000000 0x03000000 0x00000000 0x0007f800>,
+            <0x02000000 0x00000000 0x03000000 0x00000000 0x07f80000>,
+            <0x03000000 0x00000000 0x03000000 0x00000000 0xf8000000>;
+        
+        interrupts-extended = <&cpu0_intc 13 &cpu1_intc 13>;
+    };
+};

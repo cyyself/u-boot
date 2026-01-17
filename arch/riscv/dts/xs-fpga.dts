@@ -1,0 +1,11 @@
+/dts-v1/;
+
+/include/ "bosc-dualcore-system.dtsi"
+
+&spi0 {
+    status = "okay";
+};
+
+&axi_ethernet {
+    status = "okay";
+};

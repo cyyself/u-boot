@@ -1,0 +1,41 @@
+if TARGET_XS_FPGA
+
+config SYS_BOARD
+	default "xs-fpga"
+
+config SYS_VENDOR
+	default "custom"
+
+config SYS_CPU
+	default "generic"
+
+config SYS_CONFIG_NAME
+	default "xs-fpga"
+
+config TEXT_BASE
+	default 0x81200000 if SPL
+	default 0x80000000 if !RISCV_SMODE
+	default 0x80200000 if RISCV_SMODE && ARCH_RV64I
+	default 0x80400000 if RISCV_SMODE && ARCH_RV32I
+
+config SPL_TEXT_BASE
+	default 0x80000000
+
+config SPL_OPENSBI_LOAD_ADDR
+	hex
+	default 0x80100000
+
+config PRE_CON_BUF_ADDR
+	hex
+	default 0x81000000
+
+config BOARD_SPECIFIC_OPTIONS
+	def_bool y
+	select GENERIC_RISCV
+	imply XILINX_AXIEMAC
+	imply PCI
+	imply PCI_XILINX	
+	imply SYS_NS16550
+	imply SMP
+	imply PHY_MARVELL
+endif
